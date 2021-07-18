@@ -1,7 +1,18 @@
 import React from 'react'
 import styled from 'styled-components'
 import StarRating from './StarRating'
+import {useStateValue} from './StateProvider'
+
 function CheckoutProduct({id,title,image,rating,price}) {
+const [{basket},dispatch]=useStateValue();
+   
+const RemoveFromBasket=()=>{
+     dispatch({
+         type:"REMOVE_FROM_BASKET",
+         id:id,
+     })
+   }
+
     return (
         <div>
             <Checkoutitem>
@@ -16,7 +27,7 @@ function CheckoutProduct({id,title,image,rating,price}) {
                <strong>{price}</strong>
            </Price>
            <StarRating rating={rating} id={id}/>
-           <RemoveItem>
+           <RemoveItem onClick={RemoveFromBasket}>
                Remove from basket
            </RemoveItem>
             </CheckoutitemInfo>
@@ -25,7 +36,9 @@ function CheckoutProduct({id,title,image,rating,price}) {
     )
 }
 const Checkoutitem=styled.div`
+margin-top:20px;
 display:flex;
+margin-bottom:20px;
 `;
 const CheckoutitemImg=styled.div`
 width:200px;
