@@ -1,39 +1,29 @@
 const express = require("express");
 const app = express();
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+const cors = require('cors');
+require('./config/passport')
 require("dotenv").config();
-
 const { connectDB } = require("./config/database");
-
+const userRoutes=require("./routes/users/auth.js");
+const passport = require("passport");
+app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-app.use(function (req, res, next) {
-  var allowedDomains = [
-    "https://today.green",
-    "https://app.today.green",
-    "https://api.today.green",
-    "https://www.app.today.green",
-  ];
-  var origin = req.headers.origin;
-  if (process.env.NODE_ENV === "development") {
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-  } else {
-    if (allowedDomains.indexOf(origin) > -1) {
-      res.setHeader("Access-Control-Allow-Origin", origin);
-    }
+app.use(express.urlencoded({ extended: true }));
+app.use(session({
+  secret:process.env.SECRET,
+  resave:false,
+  saveUninitialized:true,
+  store: MongoStore.create({ mongoUrl: 'mongodb://localhost:27017/ecomerce' }),
+  cookie:{
+    maxAge:1000*60*60*24
   }
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, PATCH, DELETE"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type, Accept"
-  );
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  next();
-});
+}));
 
+app.use(passport.initialize())
+app.use(passport.session())
+app.use("/api/user/auth", userRoutes);
 connectDB().then(() => {
   const port = process.env.PORT || 5000;
   app.listen(port, () => {

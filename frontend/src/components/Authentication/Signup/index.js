@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
-import axios from '../../../../Api/index'
+//import axios from '../../../Api/index'
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-
+import axios from 'axios'
+import genPassword from "../../../AuthUtils/index"
 const user_regex = /^[a-zA-Z]{2,30}$/;
 const email_regex = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
 const password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,}$/;
 
 export default function Signup() {
+  const history = useNavigate();
   const [passwordType, setPasswordType] = useState("password");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -51,20 +54,16 @@ export default function Signup() {
       return;
     }
     try {
-      // after this email verify page,
+     
       await axios
         .post(
-          "/user/auth/signup",
+          "http://localhost:5000/api/user/auth/signup",
           {
             firstname: firstName,
             lastname: lastName,
             email: email,
-            password: CryptoJS.AES.encrypt(
-              password,
-              "H~jP,/%6R*'Tc|xg"
-            ).toString(),
-            type: "admin",
-          } //user: main user, employee user, conslutant
+            password:password
+          }
         )
         .then((res) => {
           if (res.data.success) {
@@ -73,7 +72,7 @@ export default function Signup() {
             setLastName("");
             setEmail("");
             setPassword("");
-            history("/email-verify");
+            history("/login");
           }
         })
         .catch((err) => {
@@ -92,11 +91,6 @@ export default function Signup() {
     }
   };
 
-  // const handleLinkedinSignup = async () => {
-  //   // e.preventDefault();
-  //   // after this email verify page,
-  //   await axios.get("http://localhost:5000/auth/linkedin");
-  // };
 
   const togglePassword = () => {
     if (passwordType === "password") {
@@ -110,33 +104,16 @@ export default function Signup() {
     <div>
       <div className="container-fluid">
         <div className=" row auth_background">
-          <div className="d-flex flex-column col-md-7 justify-content-center align-items-center para_sizing">
-            <p>Welcome to</p>
-
-            <p>today. green!</p>
-          </div>
           <div className="d-flex col-md-5  align-items-center auth_info_container">
             <div className="ml-32 col-md-10">
               <form className="d-flex flex-column">
                 <div className="align_text_left ml-2 fw-600 mt-16">
-                  <Icon />
                 </div>
                 <div className="form-group align_text_left ml-2 fw-600 mt-20">
                   <p className="f-26 mb-2  ">Sign up</p>
                 </div>
 
                 <div className="form-group align_text_left ml-2 fw-600 mt-20">
-                  {/* <label className="f-16 d-flex" htmlFor="first_name">
-                    <p>First Name</p>
-                    <i
-                      className={
-                        validFirstName ||
-                        !(firstName || firstName.trim().length > 0)
-                          ? "auth_hide"
-                          : "bi bi-asterisk auth_invalid"
-                      }
-                    ></i>
-                  </label> */}
                   <input
                     type="text"
                     placeholder="First Name"
@@ -249,7 +226,6 @@ export default function Signup() {
                     <span aria-label="dollar sign">$</span>{" "}
                     <span aria-label="percent">%</span> */}
                   {/* </p> */}
-                  <PasswordMeter password={password} />
                 </div>
 
                 <div className="d-flex align-items-center mt-16">
@@ -283,23 +259,11 @@ export default function Signup() {
                   Sign up
                 </button>
               </form>
-              <div className="w-100">
-                <a href="https://api.today.green/auth/google">
-                  <button className=" auth_media w-100">
-                    <GoogleIcon /> &nbsp; Sign in with Google
-                  </button>
-                </a>
-                <a href="https://api.today.green/auth/linkedin">
-                  <button className=" auth_media w-100">
-                    <LinkedInIcon /> &nbsp; Sign in with LinkedIn
-                  </button>
-                </a>
-              </div>
 
               <div className="auth_text_left">
                 <p className="faint_text_1">
                   Already have an account? &nbsp;
-                  <a href="/" className="auth_login">
+                  <a href="/login" className="auth_login">
                     Login
                   </a>
                 </p>

@@ -1,8 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import {Link} from 'react-router-dom'
-import SearchIcon from '@material-ui/icons/Search'
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket'
 import { useStateValue } from './StateProvider'
 function Header() {
 const [{basket},dispatch]=useStateValue()
@@ -17,11 +15,10 @@ const [{basket},dispatch]=useStateValue()
              <Header_searchInput>
                  <input type="text" />
                  <IconSearch>
-                 <SearchIcon />
                  </IconSearch>
              </Header_searchInput>
              <HeaderNav>
-               <Link to="/login">
+               <Link to="/signup">
                <Header_option>
                 <SpanOne>
                <span>krishna</span>
@@ -57,7 +54,6 @@ const [{basket},dispatch]=useStateValue()
 
              <Link to="/checkout">
                <HeaderBasket>
-                   <ShoppingBasketIcon/>
                    <NoOfItems>
                    <span>{basket?.length}</span>
                    </NoOfItems>
