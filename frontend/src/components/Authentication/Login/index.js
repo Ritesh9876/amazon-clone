@@ -1,137 +1,68 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { toast } from "react-hot-toast";
+import React, { useState } from 'react';
+import './login.css'
 import { Link, useNavigate } from "react-router-dom";
-//import CryptoJS from "crypto-js";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { auth } from '../../Firebase/firebase';
+import { createUserWithEmailAndPassword,signInWithEmailAndPassword } from "firebase/auth";
+function Login() {
+    const history = useNavigate();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-export default function Login() {
- // const { setLoadCurrent, loadCurrent } = useAuth();
-  const history = useNavigate();
-  // const [passwordType, setPasswordType] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
-  // useEffect(() => {
-  //   console.log("email is canging ", email);
-  // }, [email]);
-  // const togglePassword = () => {
-  //   setPasswordType(!passwordType);
-  // };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await axios
-        .post("http://localhost:5000/api/user/auth/login", {
-          email,
-          password: password,
-        })
-        .then((res) => {
-          if (res.data.success) {
-           // setLoadCurrent(!loadCurrent);
-            toast.success("logged in");
-            setEmail("");
-            setPassword("");
-            history("/");
-          }
-        })
-        .catch((err) => {
-          toast.error(err.response.data.message);
-        });
-    } catch (err) {
-      // console.log("login error is ", err);
-      toast.error(err.message);
+    const signIn = e => {
+        e.preventDefault();
+        signInWithEmailAndPassword(auth,email, password)
+            .then(currAuth => {
+                history('/')
+            })
+            .catch(error => alert(error.message))
     }
-  };
-  return (
-    <div>
-      <div className="container-fluid">
-        <div className=" row  auth_background">
-          <div className="d-flex col-md-5  align-items-center auth_info_container">
-            <div className="col-md-10 ml-32">
-              <form className="d-flex flex-column">
-                <div className="auth_text_start align_text_left ml-2 fw-600 mt-16">
-                  
-                </div>
-                <div className="form-group auth_text_start align_text_left ml-2 fw-600 mt-24">
-                  <p className="f-26 mb-2 ">Login</p>
-                </div>
-                <div className="form-group auth_text_start align_text_left ml-2 fw-600 mt-24">
-                  {/* <label className=" f-16" htmlFor="email">
-                    Email
-                  </label> */}
-                  <input
-                    type="email"
-                    className="form-control auth_input  border-bottom  shadow-none"
-                    id="email"
-                    placeholder="Email"
-                    aria-describedby="emailHelp"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    // placeholder="Enter email"
-                  />
-                </div>
-                <div className="form-group auth_text_start align_text_left ml-2 fw-600 mt-24">
-                  {/* <label className="f-16" htmlFor="password">
-                    Password
-                  </label> */}
-                  <div className="d-flex ">
-                    <div className="flex-grow-1">
-                      <div className="reset_pass_input">
-                        <input
-                          type={showPassword ? "text" : "password"}
-                          onChange={handlePasswordChange}
-                          value={password}
-                          name="password"
-                          placeholder="Password"
-                          id="password"
-                          className="form-control auth_input border-bottom  shadow-none"
-                        />
-                        <button
-                          className="auth_input_pas_btn2"
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
 
-                  <Link to="/forget-password">
-                    {" "}
-                    <p className="align_text_left auth_faint faint_text pointer mt-8 fit-w">
-                      Forgot password
-                    </p>
-                  </Link>
-                </div>
-                <button
-                  type="submit"
-                  className="primary_button_lg mt-32 fw-600"
-                  onClick={handleSubmit}
-                >
-                  Login
-                </button>
-              </form>
-              <div>
-                <p className="align_text_left auth_faint faint_text_1 pointer mt-20">
-                  Not a member?{" "}
-                  <span
-                    className="pointer auth_login"
-                    onClick={() => history("/signup")}
-                  >
-                    Signup
-                  </span>
+    const register = e => {
+        e.preventDefault();
+        
+        createUserWithEmailAndPassword(auth,email, password)
+            .then((currAuth) => {
+                console.log("currAuth is this ",auth)
+                // it successfully created a new user with email and password
+                if (auth) {
+                    history('/')
+                }
+            })
+            .catch(error => alert(error.message))
+    }
+
+    return (
+        <div className='login_main_container'>
+            <Link to='/'>
+                <img
+                alt="login_image"
+                    className="login__logo"
+                    src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1024px-Amazon_logo.svg.png' 
+                />
+            </Link>
+
+            <div className='login__container'>
+                <h1>Sign-in</h1>
+
+                <form>
+                    <h5>E-mail</h5>
+                    <input type='text' value={email} onChange={e => setEmail(e.target.value)} />
+
+                    <h5>Password</h5>
+                    <input type='password' value={password} onChange={e => setPassword(e.target.value)} />
+
+                    <button type='submit' onClick={signIn} className='login__signInButton'>Sign In</button>
+                </form>
+
+                <p>
+                    By signing-in you agree to the AMAZON FAKE CLONE Conditions of Use & Sale. Please
+                    see our Privacy Notice, our Cookies Notice and our Interest-Based Ads Notice.
                 </p>
-              </div>
+
+                <button onClick={register} className='login__registerButton'>Create your Amazon Account</button>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  );
+    )
 }
+
+export default Login

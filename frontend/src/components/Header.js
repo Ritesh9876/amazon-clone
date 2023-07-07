@@ -2,9 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 import {Link} from 'react-router-dom'
 import { useStateValue } from './StateProvider'
+import { auth } from './Firebase/firebase'
 function Header() {
-const [{basket},dispatch]=useStateValue()
-
+const [{basket,user},dispatch]=useStateValue()
+const handleAuthentication = ()=>{
+    if(user){
+        auth.signOut()
+    }
+}
     return (
         <Nav>
             <Link to="/">
@@ -18,13 +23,13 @@ const [{basket},dispatch]=useStateValue()
                  </IconSearch>
              </Header_searchInput>
              <HeaderNav>
-               <Link to="/signup">
-               <Header_option>
+               <Link to={!user && "/login"}>
+               <Header_option onClick={handleAuthentication}>
                 <SpanOne>
-               <span>krishna</span>
+               <span>{user? user.email :"Guest"}</span>
                </SpanOne>
                <SpanTwo>
-               <span>Sign in</span>
+               <span>{user ? "Sign out":"Sign in"}</span>
                </SpanTwo>
                </Header_option>
                </Link>
