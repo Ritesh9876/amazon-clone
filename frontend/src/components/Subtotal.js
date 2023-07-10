@@ -1,17 +1,20 @@
 import React from 'react'
 import styled from 'styled-components'
 import {useStateValue} from './StateProvider'
-import { getBasketTotal } from './reducer';
+import { useNavigate } from 'react-router-dom';
 function Subtotal() {
+    const history= useNavigate()
     const [{basket},dispatch]=useStateValue(); 
     return (
         <SubtotalContainer>
              <p>
-                 Subtotal ({basket.length} items): <strong>{`$90}`}</strong>
+                 Subtotal ({basket.length} items): <strong>{basket && basket.reduce((accumulator, currentValue) => {
+  return accumulator + currentValue.price
+},0).toFixed(2)}</strong>
              </p>
 
           <ProceedButton>
-              <button>
+              <button onClick={(e) => history("/payment")}>
             Proceed to Checkout
               </button>
           </ProceedButton>
