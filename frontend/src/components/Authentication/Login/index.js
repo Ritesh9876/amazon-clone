@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './login.css'
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from '../../Firebase/firebase';
+import { db } from '../../Firebase/firebase';
 import { createUserWithEmailAndPassword,signInWithEmailAndPassword } from "firebase/auth";
 function Login() {
     const history = useNavigate();
@@ -23,6 +24,16 @@ function Login() {
         createUserWithEmailAndPassword(auth,email, password)
             .then((currAuth) => {
                 console.log("currAuth is this ",auth)
+                db.collection("users")
+                .add({
+                    email:email,
+                })
+                .then((docRef) => {
+                    console.log("New order added with ID: ", docRef.id);
+                })
+                .catch((error) => {
+                    console.error("Error adding order: ", error);
+                });
                 // it successfully created a new user with email and password
                 if (auth) {
                     history('/')

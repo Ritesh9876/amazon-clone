@@ -7,6 +7,7 @@ import { getBasketTotal } from '../reducer';
 import axios from "../Api/axios.js"
 import { db } from '../Firebase/firebase';
 import { useStateValue } from '../StateProvider';
+import { getDoc, doc, addDoc, collection, query, where, getDocs, setDoc } from 'firebase/firestore';
 
 function PaymentPage() {
     const [{ basket, user }, dispatch] = useStateValue();
@@ -22,45 +23,48 @@ function PaymentPage() {
     const [clientSecret, setClientSecret] = useState(true);
 
     useEffect(() => {
+        if (getBasketTotal(basket) * 100 === 0) return
         const getClientSecret = async () => {
-            try{
-              const response = await axios({
-                method: 'post',
-                url: `/payments/create?total=${getBasketTotal(basket) * 100}`
-            });
-            setClientSecret(response.data.clientSecret)
-            }catch(err){ 
-              console.log("err ",err)
+            try {
+                const response = await axios({
+                    method: 'post',
+                    url: `/payments/create?total=${getBasketTotal(basket) * 100}`
+                });
+                setClientSecret(response.data.clientSecret)
+            } catch (err) {
+                console.log("err ", err)
             }
         }
-
         getClientSecret();
     }, [basket])
 
-    console.log('THE SECRET IS >>>', clientSecret)
-    console.log('👱', user)
+    // console.log('THE SECRET IS >>>', clientSecret)
+    // console.log('👱', user)
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        if (getBasketTotal(basket) * 100 === 0) return
         setProcessing(true);
-
         const payload = await stripe.confirmCardPayment(clientSecret, {
             payment_method: {
                 card: elements.getElement(CardElement)
-            }
-        }).then(({ paymentIntent }) => {
+            },
 
-            db
-              .collection('users')
-              .doc(user?.uid)
-              .collection('orders')
-              .doc(paymentIntent.id)
-              .set({
-                  basket: basket,
-                  amount: paymentIntent.amount,
-                  created: paymentIntent.created
-              })
+        }).then(async (paymentIntent) => {
+            const paymentIntentId = paymentIntent.id;
+            db.collection("orders")
+                .add({
+                    basket: basket,
+                    amount: paymentIntent.paymentIntent.amount ? paymentIntent.paymentIntent.amount : 0 ,
+                    created: paymentIntent.paymentIntent.created
 
+                })
+                .then((docRef) => {
+                    console.log("New order added with ID: ", docRef.id);
+                })
+                .catch((error) => {
+                    console.error("Error adding order: ", error);
+                });
             setSucceeded(true);
             setError(null)
             setProcessing(false)
@@ -84,8 +88,8 @@ function PaymentPage() {
             <div className='payment__container'>
                 <h1>
                     Checkout (
-                        <Link to="/checkout">{basket?.length} items</Link>
-                        )
+                    <Link to="/checkout">{basket?.length} items</Link>
+                    )
                 </h1>
 
 
@@ -118,7 +122,7 @@ function PaymentPage() {
                         ))}
                     </div>
                 </div>
-            
+
 
                 {/* Payment section - Payment method */}
                 <div className='payment__section'>
@@ -126,13 +130,13 @@ function PaymentPage() {
                         <h3>Payment Method</h3>
                     </div>
                     <div className="payment__details">
-                            {/* Stripe magic will go */}
+                        {/* Stripe magic will go */}
 
-                            <form onSubmit={handleSubmit}>
-                                <CardElement onChange={handleChange}/>
+                        <form onSubmit={handleSubmit}>
+                            <CardElement onChange={handleChange} />
 
-                                <div className='payment__priceContainer'>
-                                    {/* <CurrencyFormat
+                            <div className='payment__priceContainer'>
+                                {/* <CurrencyFormat
                                         renderText={(value) => (
                                             <h3>Order Total: {value}</h3>
                                         )}
@@ -142,16 +146,18 @@ function PaymentPage() {
                                         thousandSeparator={true}
                                         prefix={"$"}
                                     /> */}
-                                    ${getBasketTotal(basket).toFixed(2)}
+                                ${getBasketTotal(basket).toFixed(2)}
 
-                                    <button disabled={processing || disabled || succeeded}>
-                                        <span>{processing ? <p>Processing</p> : "Buy Now"}</span>
-                                    </button>
-                                </div>
+                                <button
+                                // disabled={processing || disabled || succeeded}
+                                >
+                                    <span>{processing ? <p>Processing</p> : "Buy Now"}</span>
+                                </button>
+                            </div>
 
-                                  {/* Errors */}
-                                {error && <div>{error}</div>}
-                            </form>
+                            {/* Errors */}
+                            {error && <div>{error}</div>}
+                        </form>
                     </div>
                 </div>
             </div>
