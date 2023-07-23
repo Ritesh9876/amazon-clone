@@ -1,70 +1,24 @@
-# Getting Started with Create React App
+# Amazon - Clone using ReactJs
+Hello, I am Ritesh, a MERN Stack Developer. This website is inspired by Amazon. I have used Reactjs for frontend, and Firebase for the back end.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Tech We Used
 
-## Available Scripts
+- ReactJs
+- Firebase Auth
+- Firebase Storage
+- React-Dom
+- React Redux
+- Stripe payment
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- Login and Logout
+- Add to cart
+- Remove from cart
+- Payment
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+![Screenshot from 2023-07-23 20-47-54](https://github.com/Ritesh9876/amazon-clone/assets/79216301/333366e9-3ef3-47bd-a66a-be4915a93e5d)
+![Screenshot from 2023-07-23 20-47-06](https://github.com/Ritesh9876/amazon-clone/assets/79216301/519dd591-bc48-4c7f-8830-5f6953e9f452)
+![Screenshot from 2023-07-23 20-47-44](https://github.com/Ritesh9876/amazon-clone/assets/79216301/5ea6258c-cfdd-4347-8561-3cd24b56df49)
+![Screenshot from 2023-07-23 20-48-00](https://github.com/Ritesh9876/amazon-clone/assets/79216301/990e99b8-ceb3-4135-9ff0-7480cfa5a5e0)
+![Screenshot from 2023-07-23 20-48-06](https://github.com/Ritesh9876/amazon-clone/assets/79216301/ca9a38a3-f8b1-4696-9f19-07b7a3ab7b79)
