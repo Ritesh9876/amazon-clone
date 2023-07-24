@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import {Link} from 'react-router-dom'
 import { useStateValue } from './StateProvider'
 import { auth } from './Firebase/firebase'
+import { FaShoppingBasket } from 'react-icons/fa'
 function Header() {
 const [{basket,user},dispatch]=useStateValue()
 const handleAuthentication = ()=>{
@@ -56,11 +57,13 @@ const handleAuthentication = ()=>{
                </Header_option>
                </Link>
              </HeaderNav>
-
+             
              <Link to="/checkout">
                <HeaderBasket>
                    <NoOfItems>
-                   <span>{basket?.length}</span>
+                   <span className="mr-4">{basket?.length}
+                   </span>
+                   <FaShoppingBasket/>
                    </NoOfItems>
                </HeaderBasket>
              </Link>
